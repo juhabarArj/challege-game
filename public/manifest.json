@@ -1,0 +1,51 @@
+{
+  "name": "Challenge Game",
+  "short_name": "ChallengeGame",
+  "description": "Juego multiplayer con verificación fotográfica - Desafíate con amigos",
+  "start_url": "/challege-game/",
+  "scope": "/challege-game/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#6C7DBA",
+  "background_color": "#E8EEF1",
+  "icons": [
+    {
+      "src": "/challege-game/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/challege-game/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/challege-game/icon-maskable-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/challege-game/icon-maskable-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/challege-game/screenshot-1.png",
+      "sizes": "540x720",
+      "type": "image/png",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "/challege-game/screenshot-2.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    }
+  ]
+}

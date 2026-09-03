@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useGameStore } from '../store/gameStore';
 import { createGameRoom, joinGameRoom } from '../services/supabase';
-import Button from '../components/Common/Input';
+import Button from '../components/Common/Button';
 import Input from '../components/Common/Input';
 
 export default function Home() {

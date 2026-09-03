@@ -30,51 +30,51 @@ body {
 
 .neo-button {
   @apply bg-neo-light text-neo-dark font-semibold rounded-neo shadow-neo-button px-6 py-3 cursor-pointer transition-all duration-200 ease-out;
-  
-  &:hover:not(:disabled) {
-    @apply shadow-neo-lg;
-  }
-  
-  &:active:not(:disabled) {
-    @apply shadow-neo-button-pressed;
-  }
-  
-  &:disabled {
-    @apply opacity-50 cursor-not-allowed;
-  }
+}
+
+.neo-button:hover:not(:disabled) {
+  @apply shadow-neo-lg;
+}
+
+.neo-button:active:not(:disabled) {
+  @apply shadow-neo-button-pressed;
+}
+
+.neo-button:disabled {
+  @apply opacity-50 cursor-not-allowed;
 }
 
 .neo-button-primary {
   @apply neo-button bg-neo-primary text-white;
-  
-  &:hover:not(:disabled) {
-    @apply shadow-neo-lg;
-    background-color: #5a6ba8;
-  }
+}
+
+.neo-button-primary:hover:not(:disabled) {
+  @apply shadow-neo-lg;
+  background-color: #5a6ba8;
 }
 
 .neo-button-secondary {
   @apply neo-button bg-neo-secondary text-neo-dark;
-  
-  &:hover:not(:disabled) {
-    background-color: #95c3d4;
-  }
+}
+
+.neo-button-secondary:hover:not(:disabled) {
+  background-color: #95c3d4;
 }
 
 .neo-button-danger {
   @apply neo-button bg-neo-accent text-white;
-  
-  &:hover:not(:disabled) {
-    background-color: #d63142;
-  }
+}
+
+.neo-button-danger:hover:not(:disabled) {
+  background-color: #d63142;
 }
 
 .neo-input {
   @apply w-full px-4 py-3 rounded-neo bg-neo-light text-neo-dark placeholder-gray-400 shadow-neo-inset border-none outline-none transition-all duration-200;
-  
-  &:focus {
-    @apply ring-2 ring-neo-primary ring-opacity-30;
-  }
+}
+
+.neo-input:focus {
+  @apply ring-2 ring-neo-primary ring-opacity-30;
 }
 
 .neo-card {

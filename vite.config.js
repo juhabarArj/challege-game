@@ -5,12 +5,12 @@ export default defineConfig({
   plugins: [react()],
   base: '/challege-game/',
   server: {
-    port: 5173,
+    port: 3000,
     open: true
   },
   build: {
     outDir: 'dist',
     sourcemap: false,
-    minify: 'terser'
+    minify: 'esbuild'
   }
 })

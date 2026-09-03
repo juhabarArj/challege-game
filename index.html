@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/challege-game/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#E8EEF1" />
+    <meta name="description" content="Challenge Game PWA - Juego multiplayer con verificación fotográfica" />
+    <link rel="manifest" href="/challege-game/manifest.json" />
+    <link rel="apple-touch-icon" href="/challege-game/icon-192x192.png" />
+    <title>Challenge Game</title>
+    <script type="module" crossorigin src="/challege-game/assets/index-BQiU5tn6.js"></script>
+    <link rel="stylesheet" crossorigin href="/challege-game/assets/index-6frup5YO.css">
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/challege-game/service-worker.js')
+          .then(reg => console.log('SW registered'))
+          .catch(err => console.log('SW registration failed:', err));
+      }
+    </script>
+  </body>
+</html>

@@ -1,8 +1,8 @@
-const CACHE_NAME = 'challenge-game-v2';
+const CACHE_NAME = 'challenge-game-v3';
 const urlsToCache = [
   '/challege-game/',
   '/challege-game/index.html',
-  '/challege-game/vite.svg'
+  '/challege-game/icon-192x192.png'
 ];
 
 // Install event

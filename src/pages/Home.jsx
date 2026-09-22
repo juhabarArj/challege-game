@@ -5,10 +5,12 @@ import { useGameStore } from '../store/gameStore';
 import { createGameRoom, joinGameRoom } from '../services/supabase';
 import Button from '../components/Common/Button';
 import Input from '../components/Common/Input';
+import ThemeToggle from '../components/Common/ThemeToggle';
+import UserMenu from '../components/Common/UserMenu';
 
 export default function Home() {
   const navigate = useNavigate();
-  const { userProfile, logout } = useAuth();
+  const { userProfile } = useAuth();
   const { setRoomCode, setCategory } = useGameStore();
 
   const [mode, setMode] = useState(null); // null | 'create' | 'join'
@@ -55,15 +57,6 @@ export default function Home() {
     }
   };
 
-  const handleLogout = async () => {
-    try {
-      await logout();
-      navigate('/login');
-    } catch (err) {
-      setError('Error al cerrar sesión');
-    }
-  };
-
   return (
     <div className="min-h-screen bg-neo-bg p-4">
       <div className="max-w-2xl mx-auto">
@@ -75,12 +68,10 @@ export default function Home() {
               Bienvenido, <span className="font-semibold">{userProfile?.username}</span>
             </p>
           </div>
-          <button
-            onClick={handleLogout}
-            className="text-neo-dark opacity-75 hover:opacity-100 transition-opacity"
-          >
-            Cerrar sesión
-          </button>
+          <div className="flex items-center gap-3">
+            <ThemeToggle />
+            <UserMenu />
+          </div>
         </div>
 
         {/* Main Content */}

@@ -36,12 +36,29 @@ export const getUserProfile = async (userId) => {
       .select('*')
       .eq('id', userId)
       .single();
-    
+
     if (error) throw error;
     return data;
   } catch (error) {
     console.error('Error fetching user profile:', error);
     return null;
+  }
+};
+
+export const updateUserProfile = async (userId, { username, ageGroup }) => {
+  try {
+    const { data, error } = await supabase
+      .from('users')
+      .update({ username, age_group: ageGroup })
+      .eq('id', userId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error('Error updating user profile:', error);
+    throw error;
   }
 };
 
@@ -145,20 +162,74 @@ export const subscribeToRoomChanges = (roomCode, callback) => {
 };
 
 // Challenges (simplificado - sin IA por ahora)
-export const getChallenges = async (category, limit = 10) => {
+export const getChallenges = async (category, limit = 10, topic = null) => {
   try {
-    const { data, error } = await supabase
+    let query = supabase
       .from('challenges')
       .select('*')
-      .eq('category', category)
-      .limit(limit);
-    
+      .eq('category', category);
+
+    if (topic) query = query.eq('topic', topic);
+
+    const { data, error } = await query.limit(limit);
+
     if (error) throw error;
     return data;
   } catch (error) {
     console.error('Error fetching challenges:', error);
     return [];
   }
+};
+
+// Admin: full CRUD over the challenge bank. RLS on `challenges` is permissive
+// (see supabase/schema.sql note) - the app itself gates access to this via
+// AdminRoute/userProfile.is_admin, not the database.
+export const getAllChallenges = async () => {
+  try {
+    const { data, error } = await supabase
+      .from('challenges')
+      .select('*')
+      .order('topic', { ascending: true })
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error('Error fetching all challenges:', error);
+    return [];
+  }
+};
+
+export const createChallenge = async ({ category, topic, description, difficulty, requiresPhoto }) => {
+  const { data, error } = await supabase
+    .from('challenges')
+    .insert([{ category, topic, description, difficulty, requires_photo: requiresPhoto }])
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data;
+};
+
+export const updateChallenge = async (id, { category, topic, description, difficulty, requiresPhoto }) => {
+  const { data, error } = await supabase
+    .from('challenges')
+    .update({ category, topic, description, difficulty, requires_photo: requiresPhoto })
+    .eq('id', id)
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data;
+};
+
+export const deleteChallenge = async (id) => {
+  const { error } = await supabase
+    .from('challenges')
+    .delete()
+    .eq('id', id);
+
+  if (error) throw error;
 };
 
 // Game Rounds

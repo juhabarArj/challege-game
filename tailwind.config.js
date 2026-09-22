@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: 'class',
   content: [
     "./index.html",
     "./src/**/*.{js,jsx,ts,tsx}",
@@ -7,26 +8,28 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Paleta Neumorphism
-        'neo-bg': '#E8EEF1',
-        'neo-light': '#F0F4F7',
-        'neo-dark': '#2C3E50',
-        'neo-primary': '#6C7DBA',
-        'neo-secondary': '#A8DADC',
-        'neo-accent': '#E63946',
-        'neo-success': '#06A77D',
-        'neo-warning': '#F4A261',
-        'neo-info': '#457B9D',
+        // Paleta Neumorphism — valores reales en CSS vars (src/index.css),
+        // que cambian con la clase .dark en <html> para soportar modo oscuro.
+        'neo-bg': 'rgb(var(--neo-bg) / <alpha-value>)',
+        'neo-light': 'rgb(var(--neo-light) / <alpha-value>)',
+        'neo-dark': 'rgb(var(--neo-dark) / <alpha-value>)',
+        'neo-primary': 'rgb(var(--neo-primary) / <alpha-value>)',
+        'neo-secondary': 'rgb(var(--neo-secondary) / <alpha-value>)',
+        'neo-accent': 'rgb(var(--neo-accent) / <alpha-value>)',
+        'neo-success': 'rgb(var(--neo-success) / <alpha-value>)',
+        'neo-warning': 'rgb(var(--neo-warning) / <alpha-value>)',
+        'neo-info': 'rgb(var(--neo-info) / <alpha-value>)',
       },
       boxShadow: {
-        // Sombras Neumorphism
+        // Sombras Neumorphism — también en CSS vars para que el "highlight"
+        // claro se invierta correctamente en modo oscuro.
         'neo-flat': '0 0 0 0 rgba(0,0,0,0)',
-        'neo-inset': 'inset 2px 2px 5px rgba(0,0,0,0.1), inset -2px -2px 5px rgba(255,255,255,0.7)',
-        'neo-convex': '3px 3px 7px rgba(0,0,0,0.1), -3px -3px 7px rgba(255,255,255,0.7)',
-        'neo-concave': '3px 3px 7px rgba(0,0,0,0.1) inset, -3px -3px 7px rgba(255,255,255,0.7) inset',
-        'neo-lg': '5px 5px 15px rgba(0,0,0,0.1), -5px -5px 15px rgba(255,255,255,0.7)',
-        'neo-button': '2px 2px 5px rgba(0,0,0,0.1), -2px -2px 5px rgba(255,255,255,0.7)',
-        'neo-button-pressed': '1px 1px 3px rgba(0,0,0,0.15) inset, -1px -1px 3px rgba(255,255,255,0.5) inset',
+        'neo-inset': 'inset 2px 2px 5px rgb(var(--neo-shadow-dark) / 0.1), inset -2px -2px 5px rgb(var(--neo-shadow-light) / 0.7)',
+        'neo-convex': '3px 3px 7px rgb(var(--neo-shadow-dark) / 0.1), -3px -3px 7px rgb(var(--neo-shadow-light) / 0.7)',
+        'neo-concave': '3px 3px 7px rgb(var(--neo-shadow-dark) / 0.1) inset, -3px -3px 7px rgb(var(--neo-shadow-light) / 0.7) inset',
+        'neo-lg': '5px 5px 15px rgb(var(--neo-shadow-dark) / 0.1), -5px -5px 15px rgb(var(--neo-shadow-light) / 0.7)',
+        'neo-button': '2px 2px 5px rgb(var(--neo-shadow-dark) / 0.1), -2px -2px 5px rgb(var(--neo-shadow-light) / 0.7)',
+        'neo-button-pressed': '1px 1px 3px rgb(var(--neo-shadow-dark) / 0.15) inset, -1px -1px 3px rgb(var(--neo-shadow-light) / 0.5) inset',
       },
       borderRadius: {
         'neo': '12px',

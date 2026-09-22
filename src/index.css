@@ -2,6 +2,43 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  /* Paleta Neumorphism — modo claro (valores "R G B" para rgb(var(--x) / a)) */
+  --neo-bg: 232 238 241;
+  --neo-light: 240 244 247;
+  --neo-dark: 44 62 80;
+  --neo-primary: 108 125 186;
+  --neo-secondary: 168 218 220;
+  --neo-accent: 230 57 70;
+  --neo-success: 6 167 125;
+  --neo-warning: 244 162 97;
+  --neo-info: 69 123 157;
+
+  /* Sombras neumorphism: "dark" = lado en sombra, "light" = lado iluminado */
+  --neo-shadow-dark: 0 0 0;
+  --neo-shadow-light: 255 255 255;
+
+  color-scheme: light;
+}
+
+.dark {
+  /* Paleta Neumorphism — modo oscuro */
+  --neo-bg: 27 32 41;
+  --neo-light: 36 43 54;
+  --neo-dark: 232 238 241;
+  --neo-primary: 138 154 224;
+  --neo-secondary: 120 185 188;
+  --neo-accent: 240 105 115;
+  --neo-success: 46 199 153;
+  --neo-warning: 245 178 120;
+  --neo-info: 110 170 210;
+
+  --neo-shadow-dark: 0 0 0;
+  --neo-shadow-light: 58 68 86;
+
+  color-scheme: dark;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -19,8 +56,9 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #E8EEF1;
-  color: #2C3E50;
+  background-color: rgb(var(--neo-bg));
+  color: rgb(var(--neo-dark));
+  transition: background-color 0.2s ease-out, color 0.2s ease-out;
 }
 
 /* Neumorphism Utilities */
@@ -121,16 +159,16 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #E8EEF1;
+  background: rgb(var(--neo-bg));
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #A8DADC;
+  background: rgb(var(--neo-secondary));
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #6C7DBA;
+  background: rgb(var(--neo-primary));
 }
 
 /* Responsive utilities */

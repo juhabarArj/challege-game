@@ -8,10 +8,13 @@ import Home from './pages/Home';
 import Lobby from './pages/Lobby';
 import GameBoard from './pages/GameBoard';
 import Leaderboard from './pages/Leaderboard';
+import Profile from './pages/Profile';
+import Admin from './pages/Admin';
 
 // Components
 import Loading from './components/Common/Loading';
 import PrivateRoute from './components/Auth/PrivateRoute';
+import AdminRoute from './components/Auth/AdminRoute';
 
 function App() {
   useAuthListener();
@@ -47,9 +50,17 @@ function App() {
           path="/game/:roomCode" 
           element={<PrivateRoute><GameBoard /></PrivateRoute>} 
         />
-        <Route 
-          path="/results/:roomCode" 
-          element={<PrivateRoute><Leaderboard /></PrivateRoute>} 
+        <Route
+          path="/results/:roomCode"
+          element={<PrivateRoute><Leaderboard /></PrivateRoute>}
+        />
+        <Route
+          path="/profile"
+          element={<PrivateRoute><Profile /></PrivateRoute>}
+        />
+        <Route
+          path="/admin"
+          element={<PrivateRoute><AdminRoute><Admin /></AdminRoute></PrivateRoute>}
         />
 
         {/* Catch all */}

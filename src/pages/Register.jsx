@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import Input from '../components/Common/Input';
 import Button from '../components/Common/Button';
+import ThemeToggle from '../components/Common/ThemeToggle';
 
 export default function Register() {
   const navigate = useNavigate();
@@ -69,7 +70,10 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen bg-neo-bg flex items-center justify-center p-4">
+    <div className="min-h-screen bg-neo-bg flex items-center justify-center p-4 relative">
+      <div className="absolute top-4 right-4">
+        <ThemeToggle />
+      </div>
       <div className="w-full max-w-md">
         {/* Header */}
         <div className="text-center mb-8">

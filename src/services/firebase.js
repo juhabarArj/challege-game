@@ -1,10 +1,13 @@
 import { initializeApp } from 'firebase/app';
-import { 
-  getAuth, 
+import {
+  getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
-  onAuthStateChanged
+  onAuthStateChanged,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+  updatePassword
 } from 'firebase/auth';
 
 const firebaseConfig = {
@@ -36,6 +39,17 @@ export const logoutUser = () => {
 
 export const onAuthChange = (callback) => {
   return onAuthStateChanged(auth, callback);
+};
+
+// Changing a password is a "sensitive" Firebase Auth operation - it requires
+// a recent login, so we re-authenticate with the current password first.
+export const changeUserPassword = async (currentPassword, newPassword) => {
+  const user = auth.currentUser;
+  if (!user) throw new Error('No hay sesión activa');
+
+  const credential = EmailAuthProvider.credential(user.email, currentPassword);
+  await reauthenticateWithCredential(user, credential);
+  await updatePassword(user, newPassword);
 };
 
 export default app;

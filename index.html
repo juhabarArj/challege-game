@@ -9,8 +9,18 @@
     <link rel="manifest" href="/challege-game/manifest.json" />
     <link rel="apple-touch-icon" href="/challege-game/icon-192x192.png" />
     <title>Challenge Game</title>
-    <script type="module" crossorigin src="/challege-game/assets/index-CJdG9cqo.js"></script>
-    <link rel="stylesheet" crossorigin href="/challege-game/assets/index-6frup5YO.css">
+    <script>
+      // Set the theme class before first paint to avoid a flash of the wrong theme.
+      (function () {
+        try {
+          var stored = localStorage.getItem('theme');
+          var dark = stored ? stored === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+          document.documentElement.classList.toggle('dark', dark);
+        } catch (e) {}
+      })();
+    </script>
+    <script type="module" crossorigin src="/challege-game/assets/index-C6wQ8bBK.js"></script>
+    <link rel="stylesheet" crossorigin href="/challege-game/assets/index-SObZoSDx.css">
   </head>
   <body>
     <div id="root"></div>

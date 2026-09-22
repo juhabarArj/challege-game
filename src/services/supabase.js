@@ -29,17 +29,33 @@ export const createUserProfile = async (userId, email, username, ageGroup) => {
   }
 };
 
+const fetchUserProfileOnce = async (userId) => {
+  const { data, error } = await supabase
+    .from('users')
+    .select('*')
+    .eq('id', userId)
+    .single();
+
+  if (error) throw error;
+  return data;
+};
+
 export const getUserProfile = async (userId) => {
   try {
-    const { data, error } = await supabase
-      .from('users')
-      .select('*')
-      .eq('id', userId)
-      .single();
-
-    if (error) throw error;
-    return data;
+    return await fetchUserProfileOnce(userId);
   } catch (error) {
+    // Right after registration, Firebase's auth-state listener can fire this
+    // before createUserProfile()'s insert has committed - one short retry
+    // covers that race instead of leaving userProfile permanently null.
+    if (error.code === 'PGRST116') {
+      try {
+        await new Promise((resolve) => setTimeout(resolve, 500));
+        return await fetchUserProfileOnce(userId);
+      } catch (retryError) {
+        console.error('Error fetching user profile (after retry):', retryError);
+        return null;
+      }
+    }
     console.error('Error fetching user profile:', error);
     return null;
   }
@@ -200,10 +216,18 @@ export const getAllChallenges = async () => {
   }
 };
 
-export const createChallenge = async ({ category, topic, description, difficulty, requiresPhoto }) => {
+export const createChallenge = async ({ category, topic, description, difficulty, requiresPhoto, options, correctAnswer }) => {
   const { data, error } = await supabase
     .from('challenges')
-    .insert([{ category, topic, description, difficulty, requires_photo: requiresPhoto }])
+    .insert([{
+      category,
+      topic,
+      description,
+      difficulty,
+      requires_photo: requiresPhoto,
+      options: requiresPhoto ? null : options,
+      correct_answer: requiresPhoto ? null : correctAnswer,
+    }])
     .select()
     .single();
 
@@ -211,10 +235,18 @@ export const createChallenge = async ({ category, topic, description, difficulty
   return data;
 };
 
-export const updateChallenge = async (id, { category, topic, description, difficulty, requiresPhoto }) => {
+export const updateChallenge = async (id, { category, topic, description, difficulty, requiresPhoto, options, correctAnswer }) => {
   const { data, error } = await supabase
     .from('challenges')
-    .update({ category, topic, description, difficulty, requires_photo: requiresPhoto })
+    .update({
+      category,
+      topic,
+      description,
+      difficulty,
+      requires_photo: requiresPhoto,
+      options: requiresPhoto ? null : options,
+      correct_answer: requiresPhoto ? null : correctAnswer,
+    })
     .eq('id', id)
     .select()
     .single();

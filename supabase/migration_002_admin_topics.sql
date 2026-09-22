@@ -52,7 +52,7 @@ insert into public.challenges (category, topic, description, difficulty, require
   ('adult', 'sociedad', 'Describe en una frase cómo sería el mundo perfecto', 'normal', false),
   ('adult', 'sociedad', 'Haz una foto reciclando algo', 'normal', true),
   ('junior', 'sociedad', 'Nombra 3 profesiones que ayuden a la gente', 'facil', false),
-  ('adult', 'sociedad', "Haz una foto representando 'trabajo en equipo' con objetos", 'dificil', true),
+  ('adult', 'sociedad', 'Haz una foto representando ''trabajo en equipo'' con objetos', 'dificil', true),
 
   -- Entretenimiento
   ('junior', 'entretenimiento', 'Haz una foto poniendo cara de tu personaje de película favorito', 'facil', true),

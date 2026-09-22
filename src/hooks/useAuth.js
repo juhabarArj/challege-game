@@ -46,11 +46,12 @@ export const useAuth = () => {
       setLoading(true);
       
       const { user: firebaseUser } = await registerUser(email, password);
-      
+
       // Create profile in Supabase
-      await createUserProfile(firebaseUser.uid, email, username, ageGroup);
-      
+      const [profile] = await createUserProfile(firebaseUser.uid, email, username, ageGroup);
+
       setUser(firebaseUser);
+      setUserProfile(profile);
       return firebaseUser;
     } catch (err) {
       const message = err.code === 'auth/email-already-in-use' 

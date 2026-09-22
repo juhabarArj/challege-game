@@ -19,7 +19,12 @@ const emptyForm = {
   category: 'junior',
   difficulty: 'normal',
   requiresPhoto: true,
+  optionsText: '',
+  correctAnswer: '',
 };
+
+const parseOptions = (optionsText) =>
+  optionsText.split(';').map((s) => s.trim()).filter(Boolean);
 
 export default function Admin() {
   const [challenges, setChallenges] = useState([]);
@@ -57,6 +62,8 @@ export default function Admin() {
       category: challenge.category,
       difficulty: challenge.difficulty,
       requiresPhoto: challenge.requires_photo,
+      optionsText: (challenge.options || []).join('; '),
+      correctAnswer: challenge.correct_answer || '',
     });
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -80,13 +87,27 @@ export default function Admin() {
       return;
     }
 
+    const options = parseOptions(form.optionsText);
+    if (!form.requiresPhoto) {
+      if (options.length < 2) {
+        setError('Añade al menos 2 opciones separadas por ";"');
+        return;
+      }
+      if (!form.correctAnswer || !options.includes(form.correctAnswer)) {
+        setError('Selecciona cuál de las opciones es la respuesta correcta');
+        return;
+      }
+    }
+
+    const payload = { ...form, options, correctAnswer: form.correctAnswer };
+
     try {
       setSaving(true);
       if (form.id) {
-        const updated = await updateChallenge(form.id, form);
+        const updated = await updateChallenge(form.id, payload);
         setChallenges((prev) => prev.map((c) => (c.id === form.id ? updated : c)));
       } else {
-        const created = await createChallenge(form);
+        const created = await createChallenge(payload);
         setChallenges((prev) => [created, ...prev]);
       }
       resetForm();
@@ -102,6 +123,8 @@ export default function Admin() {
     if (categoryFilter !== 'all' && c.category !== categoryFilter) return false;
     return true;
   });
+
+  const parsedOptions = parseOptions(form.optionsText);
 
   if (loading) return <Loading />;
 
@@ -192,6 +215,44 @@ export default function Admin() {
               <span className="text-neo-dark">📷 Requiere foto</span>
             </label>
 
+            {!form.requiresPhoto && (
+              <div className="space-y-3 bg-neo-bg p-4 rounded-neo">
+                <div>
+                  <label className="block text-neo-dark font-semibold mb-2 text-sm">
+                    Opciones de respuesta (separadas por ;)
+                  </label>
+                  <textarea
+                    className="neo-input min-h-[60px] resize-y"
+                    value={form.optionsText}
+                    onChange={(e) => setForm((f) => ({ ...f, optionsText: e.target.value }))}
+                    placeholder="Ej: Madrid; Barcelona; Sevilla; Valencia"
+                  />
+                </div>
+
+                {parsedOptions.length > 0 && (
+                  <div>
+                    <label className="block text-neo-dark font-semibold mb-2 text-sm">
+                      Respuesta correcta
+                    </label>
+                    <div className="flex flex-col gap-1">
+                      {parsedOptions.map((opt) => (
+                        <label key={opt} className="flex items-center cursor-pointer">
+                          <input
+                            type="radio"
+                            name="correctAnswer"
+                            checked={form.correctAnswer === opt}
+                            onChange={() => setForm((f) => ({ ...f, correctAnswer: opt }))}
+                            className="mr-2"
+                          />
+                          <span className="text-neo-dark">{opt}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
             <div className="flex gap-3">
               <Button type="submit" variant="primary" loading={saving}>
                 {form.id ? 'Guardar cambios' : 'Añadir desafío'}
@@ -251,9 +312,22 @@ export default function Admin() {
                     {c.difficulty}
                   </span>
                   <span className="px-2 py-1 rounded-neo bg-neo-bg text-neo-dark">
-                    {c.requires_photo ? '📷 Con foto' : '💬 Sin foto'}
+                    {c.requires_photo ? '📷 Con foto' : '💬 Tipo test'}
                   </span>
                 </div>
+                {!c.requires_photo && c.options?.length > 0 && (
+                  <p className="text-xs text-neo-dark opacity-75 mt-2">
+                    {c.options.map((opt) => (
+                      <span
+                        key={opt}
+                        className={opt === c.correct_answer ? 'text-neo-success font-semibold' : ''}
+                      >
+                        {opt === c.correct_answer ? `✓ ${opt}` : opt}
+                        {' · '}
+                      </span>
+                    ))}
+                  </p>
+                )}
               </div>
               <div className="flex gap-2 shrink-0">
                 <Button size="sm" variant="secondary" onClick={() => handleEdit(c)}>

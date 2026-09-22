@@ -6,11 +6,13 @@ import { getChallenges, getGameRoom } from '../services/supabase';
 import Button from '../components/Common/Button';
 import Loading from '../components/Common/Loading';
 
+const POINTS_BY_DIFFICULTY = { facil: 10, normal: 20, dificil: 30 };
+
 export default function GameBoard() {
   const { roomCode: paramRoomCode } = useParams();
   const navigate = useNavigate();
   const { userProfile } = useAuth();
-  const { players, category } = useGameStore();
+  const { players, category, scores, updateScore } = useGameStore();
 
   const [room, setRoom] = useState(null);
   const [challenges, setChallenges] = useState([]);
@@ -18,6 +20,13 @@ export default function GameBoard() {
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+
+  // Multiple-choice answer state for the current round
+  const [selectedOption, setSelectedOption] = useState(null);
+
+  useEffect(() => {
+    setSelectedOption(null);
+  }, [currentRound]);
 
   useEffect(() => {
     const initialize = async () => {
@@ -42,6 +51,24 @@ export default function GameBoard() {
   const currentPlayer = players[currentPlayerIndex];
   const currentChallenge = challenges[currentRound - 1];
   const isCurrentPlayerMe = currentPlayer?.id === userProfile?.id;
+
+  const handleSelectOption = (option) => {
+    if (selectedOption) return; // already answered this round
+    setSelectedOption(option);
+    if (option === currentChallenge?.correct_answer) {
+      updateScore(currentPlayer.id, POINTS_BY_DIFFICULTY[currentChallenge.difficulty] || 10);
+    }
+  };
+
+  const handleNextRound = () => {
+    setSelectedOption(null);
+    if (currentPlayerIndex + 1 < players.length) {
+      setCurrentPlayerIndex(currentPlayerIndex + 1);
+    } else {
+      setCurrentPlayerIndex(0);
+      setCurrentRound(currentRound + 1);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-neo-bg p-4">
@@ -101,7 +128,45 @@ export default function GameBoard() {
         )}
 
         {/* Actions */}
-        {isCurrentPlayerMe ? (
+        {isCurrentPlayerMe && currentChallenge?.requires_photo === false ? (
+          <div className="neo-card">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {(currentChallenge.options || []).map((option) => {
+                const isCorrect = option === currentChallenge.correct_answer;
+                const isSelected = option === selectedOption;
+                let variant = 'default';
+                if (selectedOption) {
+                  if (isCorrect) variant = 'primary';
+                  else if (isSelected) variant = 'danger';
+                }
+                return (
+                  <Button
+                    key={option}
+                    variant={variant}
+                    size="lg"
+                    disabled={!!selectedOption}
+                    onClick={() => handleSelectOption(option)}
+                  >
+                    {option}
+                  </Button>
+                );
+              })}
+            </div>
+
+            {selectedOption && (
+              <div className="mt-4 text-center">
+                <p className={selectedOption === currentChallenge.correct_answer ? 'text-neo-success font-semibold' : 'text-neo-accent font-semibold'}>
+                  {selectedOption === currentChallenge.correct_answer
+                    ? `¡Correcto! +${POINTS_BY_DIFFICULTY[currentChallenge.difficulty] || 10} puntos`
+                    : `Incorrecto. La respuesta correcta era: ${currentChallenge.correct_answer}`}
+                </p>
+                <Button variant="secondary" className="mt-3" onClick={handleNextRound}>
+                  Siguiente ⏭️
+                </Button>
+              </div>
+            )}
+          </div>
+        ) : isCurrentPlayerMe ? (
           <div className="flex gap-4">
             <Button variant="primary" size="lg" className="flex-1">
               📷 Tomar Foto
@@ -127,7 +192,7 @@ export default function GameBoard() {
                 <span className={`font-semibold ${index === currentPlayerIndex ? 'text-neo-primary' : 'text-neo-dark'}`}>
                   {player.username}
                 </span>
-                <span className="text-neo-primary font-bold">0 pts</span>
+                <span className="text-neo-primary font-bold">{scores[player.id] || 0} pts</span>
               </div>
             ))}
           </div>

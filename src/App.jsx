@@ -1,6 +1,5 @@
-import { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { useAuth } from './hooks/useAuth';
+import { useAuth, useAuthListener } from './hooks/useAuth';
 
 // Pages
 import Login from './pages/Login';
@@ -15,6 +14,7 @@ import Loading from './components/Common/Loading';
 import PrivateRoute from './components/Auth/PrivateRoute';
 
 function App() {
+  useAuthListener();
   const { isAuthenticated, loading } = useAuth();
 
   if (loading) {

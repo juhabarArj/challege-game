@@ -3,10 +3,14 @@ import { useAuthStore } from '../store/authStore';
 import { onAuthChange, registerUser, loginUser, logoutUser } from '../services/firebase';
 import { getUserProfile, createUserProfile } from '../services/supabase';
 
-export const useAuth = () => {
-  const { user, userProfile, loading, error, setUser, setUserProfile, setLoading, setError } = useAuthStore();
+// Subscribes to Firebase auth state changes. Must be mounted exactly once
+// (in App.jsx) - onAuthStateChanged fires its callback immediately on every
+// new subscription, so calling this from more than one component (e.g. also
+// from PrivateRoute) flips the shared `loading` flag back to true on every
+// mount, which unmounts/remounts the subscriber and loops forever.
+export const useAuthListener = () => {
+  const { setUser, setUserProfile, setLoading, setError } = useAuthStore();
 
-  // Monitor auth state
   useEffect(() => {
     const unsubscribe = onAuthChange(async (firebaseUser) => {
       setLoading(true);
@@ -29,7 +33,12 @@ export const useAuth = () => {
     });
 
     return unsubscribe;
-  }, [setUser, setUserProfile, setLoading, setError]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+};
+
+export const useAuth = () => {
+  const { user, userProfile, loading, error, setUser, setUserProfile, setLoading, setError } = useAuthStore();
 
   const register = async (email, password, username, ageGroup) => {
     try {
